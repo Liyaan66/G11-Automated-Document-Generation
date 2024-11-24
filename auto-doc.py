@@ -48,20 +48,21 @@ for index, row in data.iterrows():
     draw = ImageDraw.Draw(certificate)
     
     # Measure the width and height of the name text
-    text_bbox = draw.textbbox((0, 0), name, font=font_name)  # Get bounding box for text
-    text_width = text_bbox[2] - text_bbox[0]  # Calculate text width
-    text_height = text_bbox[3] - text_bbox[1]  # Calculate text height
+    text_bbox = draw.textbbox((0, 0), name, font=font_name)  # Box for text
+    text_width = text_bbox[2] - text_bbox[0]  # Text width
+    text_height = text_bbox[3] - text_bbox[1] # Text height
     
-    # Calculate the horizontal position for centering the text
+    # position for centering the text
     image_width = certificate.width
     x_position = (image_width - text_width) //2 # Center horizontally
     
     # Fixed vertical position
-    y_position = 625  # Adjust as needed
-    # Draw the name on the certificate
+    y_position = 629  # Adjust as needed
+
+    # Put the name on the certificates
     draw.text((x_position, y_position), name, fill="orange", font=font_name)
 
-    # Save the certificate to the output folder
+    # Save the certificates to the output folder
     output_path = os.path.join(output_folder, f"{name}.png")
     certificate.save(output_path)
 
