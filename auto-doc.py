@@ -2,6 +2,8 @@ import os
 import openpyxl
 from docxtpl import DocxTemplate
 from docx2pdf import convert
+import pandas as pd
+from PIL import Image, ImageDraw, ImageFont
 
 def generate_template_documents(excel_file, template_pnc_file, output_template_folder):
 
@@ -144,12 +146,7 @@ def generate_documents(excel_file, template_file, output_folder):
 
 generate_documents("associate_degree.xlsx", "WEP_temporary_ template.docx", "output_documents")
 
-#Generation Certificate---------------------------------
-
-import pandas as pd
-import os
-from PIL import Image, ImageDraw, ImageFont
-
+##Generation Certificate---------------------------------
 # Input data and template file 
 excel_file = "students_data.xlsx"
 template = "template.png"
