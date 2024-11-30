@@ -7,178 +7,198 @@ from docx2pdf import convert
 from docxtpl import DocxTemplate
 from PIL import Image, ImageDraw, ImageFont
 
-# Function to generate certificates using the given template and input data
-def generate_certificates(excel_file, template, output_folder, font_file, font_size=100, text_color="orange", y_position=629):
-    # Load data from the Excel file
+# Functions from the provided script
+def generate_certificates(excel_file, template, output_associate_folder, font_file, font_size=100, text_color="orange", y_position=629):
     data = pd.read_excel(excel_file)
 
-    # Ensure the output folder exists
-    if not os.path.exists(output_folder):
-        os.makedirs(output_folder)
+    if not os.path.exists(output_associate_folder):
+        os.makedirs(output_associate_folder)
 
-    # Load the font file
     font = ImageFont.truetype(font_file, font_size)
 
-    # Generate certificates for each name in the data
     for index, row in data.iterrows():
         name = row["Name"]
-        certificate = Image.open(template)  # Open the template image
-        draw = ImageDraw.Draw(certificate)  # Draw on the image
-
+        certificate = Image.open(template)
+        draw = ImageDraw.Draw(certificate)
         text_bbox = draw.textbbox((0, 0), name, font=font)
         text_width = text_bbox[2] - text_bbox[0]
         x_position = (certificate.width - text_width) // 2
-
-        # Add the name to the certificate
         draw.text((x_position, y_position), name, fill=text_color, font=font)
-
-        # Save the generated certificate
-        output_path = os.path.join(output_folder, f"{name}.png")
+        output_path = os.path.join(output_associate_folder, f"{name}.png")
         certificate.save(output_path)
         print(f"Certificate generated for {name} and saved to {output_path}")
 
-# Function to generate transcripts based on the template
-def generate_template_documents(excel_file, template_pnc_file, output_template_folder):
-    if not os.path.exists(output_template_folder):
-        os.makedirs(output_template_folder)
+def generate_trainscript_documents(excel_file, template_pnc_file, output_trainscript_folder):
 
-    # Load data from the Excel file
+    if not os.path.exists(output_trainscript_folder):
+        os.makedirs(output_trainscript_folder)
+
     workbook = openpyxl.load_workbook(excel_file)
     sheet = workbook.active
     data = list(sheet.values)
 
-    # Create a folder for PDFs if it doesn't exist
-    template_pdf_folder = os.path.join(output_template_folder, "pdfs")
+    template_pdf_folder = os.path.join(output_trainscript_folder, "pdfs")
     if not os.path.exists(template_pdf_folder):
         os.makedirs(template_pdf_folder)
 
-    # Load the Word document template
     student_data = DocxTemplate(template_pnc_file)
-
-    # Generate and save a transcript for each student
     for student in data[1:]:
-        # Fill the template with student data
         student_data.render({
             "student_id": student[0],
             "first_name": student[1],
             "last_name": student[2],
-            # more data here...
+            "logic": student[3],
+            "l_g": student[4],
+            "bcum": student[5],
+            "bc_g": student[6],
+            "design": student[7],
+            "d_g": student[8],
+            "p1": student[9],
+            "p1_g": student[10],
+            "e1": student[11],
+            "e1_g": student[12],
+            "wd": student[13],
+            "wd_g": student[14],
+            "algo": student[15],
+            "al_g": student[16],
+            "p2": student[17],
+            "p2_g": student[18],
+            "e2": student[19],
+            "e2_g": student[20],
+            "sd": student[21],
+            "sd_g": student[22],
+            "js": student[23],
+            "js_g": student[24],
+            "php": student[25],
+            "ph_g": student[26],
+            "db": student[27],
+            "db_g": student[28],
+            "vc1": student[29],
+            "v1_g": student[30],
+            "node": student[31],
+            "no_g": student[32],
+            "e3": student[33],
+            "e3_g": student[34],
+            "p3": student[35],
+            "p3_g": student[36],
+            "oop": student[37],
+            "op_g": student[38],
+            "lar": student[39],
+            "lar_g": student[40],
+            "vue": student[41],
+            "vu_g": student[42],
+            "vc2": student[43],
+            "v2_g": student[44],
+            "e4": student[45],
+            "e4_g": student[46],
+            "p4": student[47],
+            "p4_g": student[48],
+            "int": student[49],
+            "in_g": student[50],
             "cur_date": student[51],
         })
 
-        # Save the document as a Word file
-        docx_data_filename = os.path.join(output_template_folder, f"{student[0]}.docx")
+        docx_data_filename = os.path.join(output_trainscript_folder, f"{student[0]}.docx")
         student_data.save(docx_data_filename)
         print(f"Generated document: {docx_data_filename}")
 
-        # Convert the Word file to a PDF
         pdf_filename = os.path.join(template_pdf_folder, f"{student[0]}.pdf")
         convert(docx_data_filename, pdf_filename)
         print(f"Converted to PDF: {pdf_filename}")
 
-# Function to generate associate degree documents
-def generate_documents(excel_file, template_file, output_folder):
-    if not os.path.exists(output_folder):
-        os.makedirs(output_folder)
+def generate_associate_documents(excel_file, template_file, output_associate_folder):
+    if not os.path.exists(output_associate_folder):
+        os.makedirs(output_associate_folder)
 
-    # Load data from the Excel file
     workbook = openpyxl.load_workbook(excel_file)
     sheet = workbook.active
     data = list(sheet.values)
 
-    # Create a folder for PDFs if it doesn't exist
-    pdf_folder = os.path.join(output_folder, "pdfs")
+    pdf_folder = os.path.join(output_associate_folder, "pdfs")
     if not os.path.exists(pdf_folder):
         os.makedirs(pdf_folder)
 
-    # Load the Word document template
     student_template = DocxTemplate(template_file)
-
     for student in data[1:]:
-        # Fill the template with student data
         student_template.render({
             "id_kh": student[0],
             "id_e": student[1],
-            # more data here...
+            "name_kh": student[2],
+            "name_e": student[3],
+            "g1": student[4],
+            "g2": student[5],
+            "dob_kh": student[6],
+            "dob_e": student[7],
+            "pro_kh": student[8],
+            "pro_e": student[9],
+            "ed_kh": student[10],
+            "ed_e": student[11],
             "cur_date": student[12],
         })
 
-        # Save the document as a Word file
-        docx_filename = os.path.join(output_folder, f"{student[0]}.docx")
+        docx_filename = os.path.join(output_associate_folder, f"{student[0]}.docx")
         student_template.save(docx_filename)
         print(f"Generated document: {docx_filename}")
 
-        # Convert the Word file to a PDF
         pdf_filename = os.path.join(pdf_folder, f"{student[0]}.pdf")
         convert(docx_filename, pdf_filename)
         print(f"Converted to PDF: {pdf_filename}")
 
-# Function to determine which document type to generate
+# Interface
 def generate(option):
     try:
         if option == "certificates":
-            # Generate certificates
             generate_certificates(
                 excel_file="certificate_data.xlsx",
                 template="template.png",
-                output_folder="generated_certificate",
+                output_associate_folder="Certificate",
                 font_file="calibrib.ttf",
             )
         elif option == "transcripts":
-            # Generate transcripts
-            generate_template_documents(
+            generate_trainscript_documents(
                 excel_file="trainscript_data.xlsx",
                 template_pnc_file="trainscript_template.docx",
-                output_template_folder="output_data_documents",
+                output_trainscript_folder="Trainscript",
             )
         elif option == "associates":
-            # Generate associate degree documents
-            generate_documents(
+            generate_associate_documents(
                 excel_file="associate_degree.xlsx",
                 template_file="associate_template.docx",
-                output_folder="output_documents",
+                output_associate_folder="Associate",
             )
         elif option == "all":
-            # Generate all document types
             generate_certificates(
                 excel_file="certificate_data.xlsx",
                 template="template.png",
-                output_folder="generated_certificate",
+                output_associate_folder="Certificate",
                 font_file="calibrib.ttf",
             )
-            generate_template_documents(
+            generate_trainscript_documents(
                 excel_file="trainscript_data.xlsx",
                 template_pnc_file="trainscript_template.docx",
-                output_template_folder="output_data_documents",
+                output_trainscript_folder="Trainscript",
             )
-            generate_documents(
+            generate_associate_documents(
                 excel_file="associate_degree.xlsx",
                 template_file="associate_template.docx",
-                output_folder="output_documents",
+                output_associate_folder="Associate",
             )
-        # Show success message
         messagebox.showinfo("Success", f"{option.capitalize()} generated successfully!")
     except Exception as e:
-        # Show error message
         messagebox.showerror("Error", f"An error occurred: {e}")
 
-# Function to create the GUI interface
 def create_interface():
     root = tk.Tk()
     root.title("Document Generator")
     root.geometry("400x400")
 
-    # Title label
     tk.Label(root, text="Select Document to Generate", font=("Arial", 25)).pack(pady=50)
 
-    # Buttons for each document type
     tk.Button(root, text="Generate Certificates", command=lambda: generate("certificates"), width=50, bg="lightblue", font=("Arial", 15)).pack(pady=10, ipady=10)
     tk.Button(root, text="Generate Transcripts", command=lambda: generate("transcripts"), width=50, bg="lightblue", font=("Arial", 15)).pack(pady=10, ipady=10)
     tk.Button(root, text="Generate Associate", command=lambda: generate("associates"), width=50, bg="lightblue", font=("Arial", 15)).pack(pady=10, ipady=10)
     tk.Button(root, text="Generate All", command=lambda: generate("all"), width=50, bg="lightgreen", font=("Arial", 15)).pack(pady=10 , ipady=10)
 
-    # Run the application
     root.mainloop()
 
-# Start the application
 create_interface()
