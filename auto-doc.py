@@ -1,12 +1,14 @@
 import tkinter as tk
 from tkinter import messagebox
+import os
+import openpyxl
+import pandas as pd
+from docx2pdf import convert
+from docxtpl import DocxTemplate
+from PIL import Image, ImageDraw, ImageFont
 
 # Function to generate certificates using the given template and input data
 def generate_certificates(excel_file, template, output_folder, font_file, font_size=100, text_color="orange", y_position=629):
-    import os
-    import pandas as pd
-    from PIL import Image, ImageDraw, ImageFont
-
     # Load data from the Excel file
     data = pd.read_excel(excel_file)
 
@@ -23,7 +25,6 @@ def generate_certificates(excel_file, template, output_folder, font_file, font_s
         certificate = Image.open(template)  # Open the template image
         draw = ImageDraw.Draw(certificate)  # Draw on the image
 
-        # Center the text horizontally
         text_bbox = draw.textbbox((0, 0), name, font=font)
         text_width = text_bbox[2] - text_bbox[0]
         x_position = (certificate.width - text_width) // 2
@@ -38,12 +39,6 @@ def generate_certificates(excel_file, template, output_folder, font_file, font_s
 
 # Function to generate transcripts based on the template
 def generate_template_documents(excel_file, template_pnc_file, output_template_folder):
-    import os
-    import openpyxl
-    from docxtpl import DocxTemplate
-    from docx2pdf import convert
-
-    # Ensure the output folder exists
     if not os.path.exists(output_template_folder):
         os.makedirs(output_template_folder)
 
@@ -67,7 +62,7 @@ def generate_template_documents(excel_file, template_pnc_file, output_template_f
             "student_id": student[0],
             "first_name": student[1],
             "last_name": student[2],
-            # Additional data mappings go here...
+            # more data here...
             "cur_date": student[51],
         })
 
@@ -83,12 +78,6 @@ def generate_template_documents(excel_file, template_pnc_file, output_template_f
 
 # Function to generate associate degree documents
 def generate_documents(excel_file, template_file, output_folder):
-    import os
-    import openpyxl
-    from docxtpl import DocxTemplate
-    from docx2pdf import convert
-
-    # Ensure the output folder exists
     if not os.path.exists(output_folder):
         os.makedirs(output_folder)
 
@@ -105,13 +94,12 @@ def generate_documents(excel_file, template_file, output_folder):
     # Load the Word document template
     student_template = DocxTemplate(template_file)
 
-    # Generate and save documents for each student
     for student in data[1:]:
         # Fill the template with student data
         student_template.render({
             "id_kh": student[0],
             "id_e": student[1],
-            # Additional data mappings go here...
+            # more data here...
             "cur_date": student[12],
         })
 
