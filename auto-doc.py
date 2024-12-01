@@ -193,7 +193,7 @@ def generate(option):
 def create_interface():
     root = tk.Tk()
     root.title("Document Generator")
-    root.geometry("400x400")
+    root.geometry("600x500")
 
     tk.Label(root, text="Select Document to Generate", font=("Arial", 25)).pack(pady=50)
 
