@@ -7,7 +7,7 @@ from docx2pdf import convert
 from docxtpl import DocxTemplate
 from PIL import Image, ImageDraw, ImageFont
 
-# Functions from the provided script
+# Function to generate certificates
 def generate_certificates(excel_file, template, output_associate_folder, font_file, font_size=100, text_color="orange", y_position=629):
     data = pd.read_excel(excel_file)
 
@@ -28,6 +28,7 @@ def generate_certificates(excel_file, template, output_associate_folder, font_fi
         certificate.save(output_path)
         print(f"Certificate generated for {name} and saved to {output_path}")
 
+# Function to generate transcript documents
 def generate_trainscript_documents(excel_file, template_pnc_file, output_trainscript_folder):
 
     if not os.path.exists(output_trainscript_folder):
@@ -106,6 +107,7 @@ def generate_trainscript_documents(excel_file, template_pnc_file, output_trainsc
         convert(docx_data_filename, pdf_filename)
         print(f"Converted to PDF: {pdf_filename}")
 
+# Function to generate associate documents
 def generate_associate_documents(excel_file, template_file, output_associate_folder):
     if not os.path.exists(output_associate_folder):
         os.makedirs(output_associate_folder)
@@ -144,7 +146,7 @@ def generate_associate_documents(excel_file, template_file, output_associate_fol
         convert(docx_filename, pdf_filename)
         print(f"Converted to PDF: {pdf_filename}")
 
-# Interface
+# Function to generate documents based on user selection
 def generate(option):
     try:
         if option == "certificates":
@@ -187,6 +189,7 @@ def generate(option):
     except Exception as e:
         messagebox.showerror("Error", f"An error occurred: {e}")
 
+# Function to create the GUI interface
 def create_interface():
     root = tk.Tk()
     root.title("Document Generator")
